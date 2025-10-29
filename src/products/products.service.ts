@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
-import { CreateProductDTO } from './dto/create-product.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { UpsertProductDTO } from './dto/upsert-product.dto';
 
 @Injectable()
 export class ProductsService {
-    private products;
-
+    private products: Array<any>;
+    
     constructor() {
         this.products = [
         {
@@ -16,15 +16,19 @@ export class ProductsService {
             "name": "Morango"
         }
         ]
+
     }
 
     findAll() {
         return this.products;
     }
 
-    create(product: CreateProductDTO) {
+    create(product: UpsertProductDTO) {
         // last id porque eu quero controlar o próximo id
-        const last_id: number = this.products[this.products.length - 1].id;
+        let last_id = 0;
+        if (this.products.length != 0) {
+            last_id = this.products[this.products.length - 1].id;
+        }
         const newProduct = {
             "id": last_id + 1,
             ...product
@@ -34,5 +38,29 @@ export class ProductsService {
         return {
             "message": "Produto Criado!"
         };
+    }
+
+    update(id: number, product: UpsertProductDTO) {
+        // [ 1, 2, 3, 4 ]
+        const index = this.products.findIndex((p) => p.id == id);
+        if(index == -1) {
+            throw new NotFoundException('Produto não encontrado!')
+        }
+        this.products[index] = {
+            'id': this.products[index].id,
+            // spread
+            ...product
+        }
+        
+        return {
+            "message": "Produto Atualizado!"
+        };
+    }
+
+    delete(id: number) {
+        this.products = this.products.filter((p) => p.id != id);
+        return {
+            "message": "Produto removido!"
+        }
     }
 }
