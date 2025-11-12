@@ -14,7 +14,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       username: 'root',
       password: '',
       database: 'curso',
-      entities: [],
+      autoLoadEntities: true,
       synchronize: false,  // importante! false em produção
       logging: true,
     }),
