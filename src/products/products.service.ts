@@ -1,11 +1,17 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { UpsertProductDTO } from './dto/upsert-product.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Product } from './products.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class ProductsService {
     private products: Array<any>;
     
-    constructor() {
+    constructor(
+        @InjectRepository(Product)
+        private productsRepository: Repository<Product>
+    ) {
         this.products = [
         {
             "id": 1,
