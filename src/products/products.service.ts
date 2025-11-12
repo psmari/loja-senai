@@ -26,21 +26,13 @@ export class ProductsService {
     }
 
     findAll() {
-        return this.products;
+        return this.productsRepository.find();
     }
 
-    create(product: UpsertProductDTO) {
-        // last id porque eu quero controlar o próximo id
-        let last_id = 0;
-        if (this.products.length != 0) {
-            last_id = this.products[this.products.length - 1].id;
-        }
-        const newProduct = {
-            "id": last_id + 1,
-            ...product
-        };
-        this.products.push(newProduct);
-       
+    async create(product: UpsertProductDTO) {
+        const newProduct = this.productsRepository.create(product);        
+        await this.productsRepository.save(newProduct);
+        
         return {
             "message": "Produto Criado!"
         };
