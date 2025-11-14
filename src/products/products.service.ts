@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { UpsertProductDTO } from './dto/upsert-product.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from './products.entity';
 import { Repository } from 'typeorm';
+import { UpsertProductDTO } from './dto/upsert-product.dto'
 
 @Injectable()
 export class ProductsService {
@@ -38,25 +38,25 @@ export class ProductsService {
         };
     }
 
-    update(id: number, product: UpsertProductDTO) {
+    async update(id: number, product: UpsertProductDTO) {
         // [ 1, 2, 3, 4 ]
-        const index = this.products.findIndex((p) => p.id == id);
-        if(index == -1) {
-            throw new NotFoundException('Produto não encontrado!')
+        const productFound = await this.productsRepository.findOne({
+            where: {id}
+        });
+
+        if(!productFound) {
+            throw new NotFoundException('Produto não encontrado!');
         }
-        this.products[index] = {
-            'id': this.products[index].id,
-            // spread
-            ...product
-        }
+        
+        await this.productsRepository.update(id, product);
         
         return {
             "message": "Produto Atualizado!"
         };
     }
 
-    delete(id: number) {
-        this.products = this.products.filter((p) => p.id != id);
+    async delete(id: number) {
+        await this.productsRepository.delete(id)
         return {
             "message": "Produto removido!"
         }
