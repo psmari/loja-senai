@@ -8,6 +8,8 @@ import { EmployeesModule } from './employees/employees.module';
 import { CustomersModule } from './customers/customers.module';
 import { ProductsModule } from './products/products.module';
 import { SalesModule } from './sales/sales.module';
+import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -22,7 +24,10 @@ import { SalesModule } from './sales/sales.module';
       synchronize: false,  // importante! false em produção
       logging: true,
     }),
-    ProductsModule, CustomersModule, EmployeesModule, SalesModule],
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    ProductsModule, CustomersModule, EmployeesModule, SalesModule, AuthModule],
   controllers: [AppController],
   providers: [AppService],
 })

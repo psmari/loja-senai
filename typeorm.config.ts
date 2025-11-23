@@ -10,8 +10,8 @@ export default new DataSource({
   host: 'localhost',
   port: 3306,
   username: 'root',
-  password: '',
-  database: 'loja_senai',
+  password: 'root',
+  database: 'curso',
   entities: [Product, Customer, Sale, SaleProduct, Employee],
   migrations: ['dist/migrations/*.js'],
 });

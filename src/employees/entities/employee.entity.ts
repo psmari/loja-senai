@@ -1,5 +1,6 @@
+import * as bcrypt from 'bcrypt';
 import { Sale } from "../../sales/entities/sale.entity";
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Employee {
@@ -23,4 +24,16 @@ export class Employee {
 
     @OneToMany(() => Sale, (sale) => sale.employee)
     sales: Sale[]
+
+    @Column()
+    password: string;
+
+    @BeforeInsert()
+    @BeforeUpdate()
+    async hashPassword() {
+        if (this.password && !this.password.startsWith('$2b$')) {
+        const salt = await bcrypt.genSalt(10);
+        this.password = await bcrypt.hash(this.password, salt);
+        }
+    }
 }

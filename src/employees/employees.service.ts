@@ -36,6 +36,19 @@ export class EmployeesService {
     return employee;
   }
 
+  async findByEmail(email: string): Promise<Employee> {
+    const employee = await this.employeesRepository.findOne({
+      where: { email },
+      relations: ['sales'],
+    });
+
+    if (!employee) {
+      throw new NotFoundException(`Employee #${email} not found`);
+    }
+
+    return employee;
+  }
+
   async update(id: number, updateEmployeeDto: UpdateEmployeeDto): Promise<Employee> {
     const employee = await this.findOne(id);
 
