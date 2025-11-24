@@ -32,6 +32,7 @@ import { AuthModule } from './auth/auth.module';
         autoLoadEntities: true,
         synchronize: false,
         logging: true,
+        ssl: true,
       }),
     }),
 
